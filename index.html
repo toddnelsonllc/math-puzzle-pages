@@ -4,6 +4,7 @@
 <head>
     <title>Daily Math Puzzle</title>
     <style>
+        /* Your existing styles */
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 60px);
@@ -103,9 +104,128 @@
                 font-weight: normal;
             }
         }
+
+        /* Media queries for iPhone */
+        @media (max-width: 480px) {
+            h2 {
+                font-size: 20px; /* Smaller heading */
+            }
+
+            #activeClue {
+                font-size: 16px;
+                width: 90%; /* Make it wider on smaller screens */
+                height: auto; /* Adjust height based on content */
+                padding: 6px;
+                margin: 8px auto;
+            }
+
+            #timer {
+                font-size: 16px;
+                margin-top: 15px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(3, 45px); /* Smaller grid cells */
+                grid-template-rows: repeat(3, 45px);
+                gap: 3px;
+                margin: 15px auto;
+            }
+
+            .cell {
+                font-size: 18px;
+                line-height: 45px;
+            }
+
+            .label {
+                font-size: 9px;
+                left: 2px;
+                top: 1px;
+            }
+
+            .input {
+                font-size: 18px;
+                line-height: 45px;
+            }
+
+            .numpad {
+                grid-template-columns: repeat(5, 35px); /* Smaller numpad buttons */
+                grid-gap: 3px;
+                margin-top: 8px;
+            }
+
+            .numpad button {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            div[align="center"] > button { /* Target the buttons below the numpad */
+                font-size: 14px !important;
+                padding: 6px 10px !important;
+                margin: 0 5px; /* Add some horizontal margin between buttons */
+            }
+        }
+
+        /* Media queries for iPad (portrait and landscape) */
+        @media (min-width: 481px) and (max-width: 1024px) {
+            h2 {
+                font-size: 24px; /* Slightly smaller heading than desktop */
+            }
+
+            #activeClue {
+                font-size: 18px;
+                width: 70%;
+                height: auto;
+                padding: 8px;
+                margin: 10px auto;
+            }
+
+            #timer {
+                font-size: 20px;
+                margin-top: 20px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(3, 55px); /* Slightly smaller grid cells */
+                grid-template-rows: repeat(3, 55px);
+                gap: 4px;
+                margin: 20px auto;
+            }
+
+            .cell {
+                font-size: 22px;
+                line-height: 55px;
+            }
+
+            .label {
+                font-size: 10px;
+                left: 3px;
+                top: 2px;
+            }
+
+            .input {
+                font-size: 22px;
+                line-height: 55px;
+            }
+
+            .numpad {
+                grid-template-columns: repeat(5, 45px); /* Slightly larger numpad buttons than iPhone */
+                grid-gap: 4px;
+                margin-top: 10px;
+            }
+
+            .numpad button {
+                font-size: 16px;
+                padding: 9px;
+            }
+
+            div[align="center"] > button { /* Target the buttons below the numpad */
+                font-size: 16px !important;
+                padding: 8px 12px !important;
+                margin: 0 8px; /* Add some horizontal margin between buttons */
+            }
+        }
     </style>
-
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
