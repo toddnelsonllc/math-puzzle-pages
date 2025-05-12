@@ -137,7 +137,7 @@
             }
 
             .cell {
-                font-size: 24px; /* Increase the font size */
+                font-size: 30px; /* Increase the font size */
                 text-align: center; /* Ensure horizontal centering */
                 display: flex; /* Enable flexbox for vertical centering */
                 align-items: center; /* Vertically center the content */
@@ -182,61 +182,91 @@
 
         /* Media queries for iPad (portrait and landscape) */
         @media (min-width: 481px) and (max-width: 1024px) {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
             h2 {
-                font-size: 24px; /* Slightly smaller heading than desktop */
+                font-size: 28px; /* Slightly larger heading for iPad */
             }
 
             #activeClue {
-                font-size: 18px;
-                width: 70%;
+                font-size: 36px; /* Larger clue size for iPad */
+                width: 70%; /* Adjust width for iPad */
                 height: auto;
-                padding: 8px;
-                margin: 10px auto;
+                padding: 10px;
+                margin: 15px auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             #timer {
-                font-size: 20px;
-                margin-top: 20px;
+                font-size: 22px; /* Slightly larger timer for iPad */
+                margin-top: 25px;
+                text-align: center;
             }
 
             .grid {
-                grid-template-columns: repeat(3, 55px); /* Slightly smaller grid cells */
-                grid-template-rows: repeat(3, 55px);
-                gap: 4px;
-                margin: 20px auto;
+                display: grid;
+                grid-template-columns: repeat(3, 90px); /* Larger grid cells for iPad */
+                grid-template-rows: repeat(3, 90px);
+                gap: 8px;
+                margin: 25px auto;
             }
 
             .cell {
-                font-size: 22px;
-                line-height: 55px;
+                font-size: 50px; /* Larger font size for iPad cells */
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                line-height: normal;
             }
 
             .label {
-                font-size: 10px;
-                left: 3px;
-                top: 2px;
+                font-weight: bold;
+                position: absolute;
+                top: 5px; /* Adjust top position for iPad */
+                left: 8px; /* Adjust left position for iPad */
+                font-size: 14px; /* Slightly larger label for iPad */
+                color: gray; /* Using gray as per your earlier style */
             }
 
             .input {
-                font-size: 22px;
-                line-height: 55px;
+                font-size: 26px; /* Larger input font for iPad */
+                line-height: 90px; /* Match line height to cell height */
+                pointer-events: none;
             }
 
             .numpad {
-                grid-template-columns: repeat(5, 45px); /* Slightly larger numpad buttons than iPhone */
-                grid-gap: 4px;
-                margin-top: 10px;
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                grid-gap: 10px; /* Larger gap for iPad buttons */
+                margin: 20px auto;
+                padding: 0 20px; /* Add more horizontal padding for iPad */
+                width: 60%; /* Adjust numpad width for iPad */
+                touch-action: manipulation;
             }
 
             .numpad button {
-                font-size: 16px;
-                padding: 9px;
+                font-size: 24px; /* Larger button font for iPad */
+                padding: 16px; /* Larger button padding for iPad */
+                border-radius: 8px;
             }
 
-            div[align="center"] > button { /* Target the buttons below the numpad */
-                font-size: 16px !important;
-                padding: 8px 12px !important;
-                margin: 0 8px; /* Add some horizontal margin between buttons */
+            div[align="center"] {
+                width: 60%; /* Adjust button container width for iPad */
+                margin: 15px auto;
+                text-align: center;
+            }
+
+            div[align="center"] > button {
+                font-size: 18px !important;
+                padding: 12px 20px !important;
+                margin: 0 10px;
+                display: inline-block;
             }
         }
     </style>
