@@ -111,77 +111,62 @@
                 margin: 0; /* Remove default body margins */
                 padding: 0; /* Remove default body padding */
             }
-
+            
             h2 {
-                font-size: 24px;
-                text-align: center; /* Ensure it's centered within the full width */
+                font-size: 24px; /* Increased heading size */
             }
 
             #activeClue {
-                font-size: 18px;
-                width: 95%; /* Almost full width */
+                font-size: 18px; /* Increased clue size */
+                width: 95%; /* Slightly wider */
                 height: auto;
-                padding: 8px;
-                margin: 10px auto;
+                padding: 8px; /* Increased padding */
+                margin: 10px auto; /* Increased margin */
             }
 
             #timer {
-                font-size: 18px;
-                margin-top: 20px;
-                text-align: center; /* Ensure it's centered */
+                font-size: 18px; /* Increased timer size */
+                margin-top: 20px; /* Increased top margin */
             }
 
             .grid {
-                grid-template-columns: repeat(3, auto); /* Let columns auto-size based on content */
-                grid-template-rows: repeat(3, auto);
-                gap: 4px;
-                width: 95%; /* Take up more width */
-                margin: 15px auto;
+                grid-template-columns: repeat(3, 50px); /* Slightly larger grid cells */
+                grid-template-rows: repeat(3, 50px);
+                gap: 4px; /* Slightly larger gap */
+                margin: 20px auto; /* Increased margin */
             }
 
             .cell {
-                font-size: 20px;
-                line-height: normal; /* Adjust line-height for auto-sized cells */
-                display: flex; /* Center content within auto-sized cells */
-                align-items: center;
-                justify-content: center;
+                font-size: 20px; /* Increased cell font */
+                line-height: 50px; /* Match line-height */
             }
 
             .label {
-                font-size: 10px;
-                left: 2px;
-                top: 1px;
+                font-size: 10px; /* Keep label size */
+                left: 3px;
+                top: 2px;
             }
 
             .input {
-                font-size: 20px;
-                line-height: normal; /* Adjust line-height */
-                pointer-events: none;
+                font-size: 20px; /* Increased input font */
+                line-height: 50px; /* Match line-height */
             }
 
             .numpad {
-                grid-template-columns: repeat(5, 1fr); /* Distribute space evenly */
+                grid-template-columns: repeat(5, 40px); /* Slightly larger numpad buttons */
                 grid-gap: 4px;
-                width: 95%; /* Take up more width */
-                margin: 10px auto;
+                margin-top: 10px;
             }
 
             .numpad button {
-                font-size: 16px;
-                padding: 10px; /* Adjust padding for the new button size */
+                font-size: 16px; /* Increased button font */
+                padding: 9px; /* Increased padding */
             }
 
-            div[align="center"] { /* Target the container of the buttons */
-                width: 95%; /* Make the button container wider */
-                margin: 10px auto; /* Center the container */
-                text-align: center; /* Center the buttons within */
-            }
-
-            div[align="center"] > button {
-                font-size: 16px !important;
-                padding: 10px 15px !important; /* Adjust button padding */
-                margin: 0 5px;
-                display: inline-block; /* Allow buttons to sit side-by-side within the wider container */
+            div[align="center"] > button { /* Target the buttons below the numpad */
+                font-size: 16px !important; /* Increased button font */
+                padding: 8px 12px !important; /* Increased padding */
+                margin: 0 8px; /* Adjust horizontal margin */
             }
         }
 
