@@ -132,6 +132,7 @@
             .grid {
                 grid-template-columns: repeat(3, 70px); /* Slightly larger grid cells */
                 grid-template-rows: repeat(3, 70px);
+                width: 95%; /* Maintain a reasonable width */
                 gap: 6px; /* Slightly larger gap */
                 margin: 20px auto; /* Increased margin */
             }
@@ -144,9 +145,9 @@
             .label {
             font-weight: bold;
             position: absolute;
-            top: 1px;
-            left: 2px;
-            font-size: 10px;
+            top: 0px;
+            left: 4px;
+            font-size: 12px;
             color: blue;
             }
 
@@ -156,14 +157,17 @@
             }
 
             .numpad {
-                grid-template-columns: repeat(5, 40px); /* Slightly larger numpad buttons */
-                grid-gap: 4px;
-                margin-top: 10px;
+                display: grid;
+                grid-template-columns: repeat(5, 1fr); /* Keep using 1fr for even distribution */
+                grid-gap: 6px; /* Slightly larger gap for bigger buttons */
+                width: 95%; /* Maintain a reasonable width */
+                margin: 15px auto; /* Adjust margin if needed */
             }
 
             .numpad button {
-                font-size: 16px; /* Increased button font */
-                padding: 9px; /* Increased padding */
+                font-size: 20px; /* Increase the font size of the numbers */
+                padding: 12px; /* Increase the padding to make the buttons taller and wider visually */
+                border-radius: 6px; /* Slightly larger border-radius can look better with larger buttons */
             }
 
             div[align="center"] > button { /* Target the buttons below the numpad */
