@@ -133,18 +133,22 @@
                 grid-template-columns: repeat(3, 70px); /* Slightly larger grid cells */
                 grid-template-rows: repeat(3, 70px);
                 gap: 6px; /* Slightly larger gap */
-                margin: 20px auto; /* Increased margin */
+                margin: 20px auto; /* Auto margins for centering */
             }
 
             .cell {
-                font-size: 30px; /* Increased cell font */
-                line-height: 50px; /* Match line-height */
+                font-size: 30px; /* Increase the font size */
+                text-align: center; /* Ensure horizontal centering */
+                display: flex; /* Enable flexbox for vertical centering */
+                align-items: center; /* Vertically center the content */
+                justify-content: center; /* Ensure horizontal centering (redundant with text-align, but good practice) */
+                line-height: normal; /* Reset line-height to avoid interference with flexbox centering */
             }
 
             .label {
             font-weight: bold;
             position: absolute;
-            top: 0px;
+            top: -2px;
             left: 4px;
             font-size: 12px;
             color: blue;
@@ -158,9 +162,9 @@
             .numpad {
                 display: grid;
                 grid-template-columns: repeat(5, 1fr); /* Keep using 1fr for even distribution */
-                grid-gap: 6px; /* Slightly larger gap for bigger buttons */
-                width: 95%; /* Maintain a reasonable width */
-                margin: 15px auto; /* Adjust margin if needed */
+                grid-gap: 8px; /* Slightly larger gap for bigger buttons */
+                margin: 15px auto; /* Auto margins for centering */
+                padding: 0 10px; /* Add some horizontal padding to the numpad container if needed */
             }
 
             .numpad button {
