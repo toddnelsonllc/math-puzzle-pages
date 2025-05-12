@@ -133,7 +133,6 @@
                 grid-template-columns: repeat(3, 70px); /* Slightly larger grid cells */
                 grid-template-rows: repeat(3, 70px);
                 gap: 6px; /* Slightly larger gap */
-                width: 95%; /* Maintain a reasonable width */
                 margin: 20px auto; /* Increased margin */
             }
 
@@ -143,9 +142,12 @@
             }
 
             .label {
-                font-size: 10px; /* Keep label size */
-                left: 3px;
-                top: 2px;
+            font-weight: bold;
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            font-size: 14px;
+            color: blue;
             }
 
             .input {
