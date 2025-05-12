@@ -1,247 +1,513 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Test Your Mental Math</title>
+    <title>Daily Math Puzzle</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            text-align: center;
-        }
-        .welcome-message {
-            font-size: 18px;
-            background-color: #f0f8ff;
-            border: 1px solid #ddd;
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
         .grid {
             display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-template-rows: repeat(3, 60px);
             gap: 5px;
-            justify-content: center;
-            margin: 20px 0;
+            margin: 20px auto;
         }
-        .cell-wrapper {
-            position: relative;
-            width: 50px;
-            height: 50px;
-        }
+
         .cell {
-            width: 100%;
-            height: 100%;
+            border: 1px solid #aaa;
+            position: relative;
+            font-size: 24px;
             text-align: center;
-            font-size: 20px;
-            box-sizing: border-box;
+            background-color: white;
         }
-        .clue-number {
+
+        .label {
+            font-weight: bold;
             position: absolute;
             top: 2px;
-            left: 2px;
+            left: 4px;
             font-size: 10px;
-            color: #333;
+            color: gray;
         }
-        .clues {
-            max-width: 500px;
-            margin: 0 auto 20px;
-            text-align: left;
+
+        .input {
+            font-size: 24px;
+            line-height: 60px;
+            pointer-events: none;
         }
-        .clues h3 {
-            margin-bottom: 5px;
+
+        .selected {
+            background-color: #d0e6ff !important;
+            box-shadow: 0 0 10px rgba(0, 120, 255, 0.6);
         }
-        .button {
-            margin: 10px 0;
-            padding: 10px;
-            font-size: 16px;
+
+        .correct {
+            background-color: #c8f7c5 !important;
         }
-        #result {
-            font-weight: bold;
-            margin-top: 15px;
+
+        .incorrect {
+            background-color: #f8c8c8 !important;
         }
-        #timer {
+
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(5, 40px);
+            grid-gap: 5px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .numpad button {
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
             font-size: 18px;
-            margin-bottom: 10px;
-            transition: font-weight 0.3s;
+            padding: 10px;
+            transition: background-color 0.2s;
         }
-        .blink {
-            animation: blink-animation 1s steps(2, start) infinite;
+
+        .confetti {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background-color: red;
+            animation: fall 1s ease-out forwards;
         }
-        @keyframes blink-animation {
-            0% { font-weight: normal; }
-            50% { font-weight: bold; }
-            100% { font-weight: normal; }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(600px);
+                opacity: 0;
+            }
+        }
+
+        .flash {
+            animation: flashTime 1s steps(2, start) infinite;
+        }
+
+        @keyframes flashTime {
+            0%,
+            100% {
+                color: black;
+                font-weight: bold;
+            }
+
+            50% {
+                color: black;
+                font-weight: normal;
+            }
         }
     </style>
-</head>
-<body>
-    <h1>Test Your Mental Math</h1>
 
-    <div class="welcome-message">
-        🧠 <strong>Welcome!</strong> Test your mental math skills with a new puzzle each day.<br />
-        Come back daily to challenge yourself and improve your speed!
+
+</head>
+
+<body>
+    <h2 align="center">A Math Puzzle</h2>
+
+    <div id="activeClue" style="
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: blue;
+        background-color: #e0f0ff;
+        border: 2px solid black;
+        padding: 8px;
+        margin: 10px auto;
+        width: 220px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    "></div>
+
+
+    <div id="timer" style="text-align:center; font-size: 20px; font-weight: bold; margin: 20px 0 0 0;">
+        Time: 0.0s
     </div>
 
-    <label for="puzzle-date">Select Archived Puzzle:</label>
-    <input type="date" id="puzzle-date" min="2025-05-01" />
-    <button class="button" onclick="loadPuzzleByDate()">Load Puzzle</button>
 
-    <div id="timer">⏱ Time: 0.0 seconds</div>
+    <div style="display: flex; justify-content: center;">
+        <div class="grid" id="grid"></div>
+    </div>
 
-    <div class="grid" id="grid"></div>
+    <div align="center">
+        <div class="numpad" style="grid-template-columns: repeat(5, 40px);">
 
-    <button class="button" onclick="checkAnswers()">Check Answers</button>
-    <div id="result"></div>
+            <button onclick="appendNum('1')">1</button>
+            <button onclick="appendNum('2')">2</button>
+            <button onclick="appendNum('3')">3</button>
+            <button onclick="appendNum('4')">4</button>
+            <button onclick="appendNum('5')">5</button>
+            <button onclick="appendNum('6')">6</button>
+            <button onclick="appendNum('7')">7</button>
+            <button onclick="appendNum('8')">8</button>
+            <button onclick="appendNum('9')">9</button>
+            <button onclick="appendNum('0')">0</button>
+            <button onclick="backspace()" style="grid-column: span 2;">←</button>
 
-    <div class="clues">
-        <h3>Clues</h3>
-        <ul id="across-clues"></ul>
+        </div>
+        <div align="center" style="margin-top: 10px;">
+            <button onclick="resetPuzzle()"
+                style="font-size: 16px; padding: 8px 16px; background-color: #eee; border: 1px solid #aaa; cursor: pointer;">
+                Reset Puzzle
+            </button>
+            <button onclick="newPuzzle()"
+                style="font-size: 16px; padding: 8px 16px; background-color: #eee; border: 1px solid #aaa; cursor: pointer;">
+                New Puzzle
+            </button>
+        </div>
+
+
     </div>
 
     <script>
-        let solution = {};
-        let clueNumbers = {};
-        let startTime;
-        let timerInterval;
-        let puzzleLoaded = false;
+        const grid = document.getElementById("grid");
+        const clueMap = {
+            "1": [0, 1],
+            "2": [2],
+            "3": [3, 4, 5],
+            "4": [6],
+            "5": [7, 8]
+        };
+        let clues = {}; // Declared with let to allow reassignment
+        let answers = {}; // Declared with let
+        const clueStarts = {
+            0: "1",
+            2: "2",
+            3: "3",
+            6: "4",
+            7: "5"
+        };
+        let currentClue = null;
+        const answerMap = {};
+        let timerInterval = null; // Ensure timerInterval is initially null
+        let timer = 0;
+        let timerStarted = false; // New variable to track if the timer has started
+
+        function generateClue1() {
+            const possibleNums1 = [2, 3, 4, 5, 6];
+            const randomIndex1 = Math.floor(Math.random() * possibleNums1.length);
+            const possibleNums2 = [5, 6];
+            const randomIndex2 = Math.floor(Math.random() * possibleNums2.length);
+            const num1 = possibleNums1[randomIndex1];
+            const num2 = possibleNums2[randomIndex2];
+            const product = num1 * num2;
+            const clue = `${num1} × ${num2} =`;
+            const answer = String(num1 * num2);
+            return { clue, answer };
+        }
+
+        function generateClue2() {
+            const possibleNums = [2, 3, 4, 5]; // Possible numbers for square root
+            const randomIndex = Math.floor(Math.random() * possibleNums.length);
+            const num = possibleNums[randomIndex];
+            const clue = `Square Root of ${num * num} =`;
+            const answer = String(num);
+            return { clue, answer };
+        }
+
+        function generateClue3() {
+            // Generate num1 that rounds to the nearest 100 (100 - 900)
+            const base100 = Math.floor(Math.random() * 9) + 1; // Generates 1 to 9
+            const num1 = base100 * 100;
+
+            // Generate num2 that rounds to the nearest 10 (e.g., 20, 30, 70)
+            const base10 = Math.floor(Math.random() * 9) + 1; // Generates 1 to 9
+            const num2 = base10 * 10;
+
+            // Generate num3 between 1 and 9
+            const num3 = Math.floor(Math.random() * 9) + 1;
+            const clue = `${num1} + ${num2} + ${num3} =`;
+            const answer = String(num1 + num2 + num3);
+            return { clue, answer };
+        }
+
+        function generateClue4() {
+            // Generate a single-digit answer (0 to 9)
+            const answer = Math.floor(Math.random() * 10);
+
+            // Generate a single-digit number to subtract (1 to 9)
+            const num2 = Math.floor(Math.random() * 9) + 1;
+
+            // Calculate the potential double-digit number (num1)
+            const num1 = answer + num2;
+
+            let finalNum1 = num1;
+            let finalAnswer = answer;
+
+            // Ensure finalNum1 is always a double-digit number (at least 10)
+            if (finalNum1 < 10) {
+                const adjustment = 10 - finalNum1;
+                finalNum1 += adjustment;
+                finalAnswer = finalNum1 - num2;
+            }
+
+            const clue = `${finalNum1} - ${num2} =`;
+            const answerString = String(finalAnswer);
+            return { clue, answer: answerString };
+        }
+
+        function generateClue5() {
+            const possibleNums = [2, 3, 4, 5, 6, 7, 8, 9]; // Possible numbers for multiplication
+            const randomIndex = Math.floor(Math.random() * possibleNums.length);
+            const num1 = possibleNums[randomIndex];
+            const num2 = 10;
+            const subtract = Math.floor(Math.random() * 9) + 1; // Generates 1 to 9
+            const product = num1 * num2;
+            const clue = `(${num1} × ${num2}) - ${subtract} =`;
+            const answer = String(product - subtract);
+            return { clue, answer };
+        }
+
+        function initializePuzzle() {
+            const clueData1 = generateClue1();
+            clues["1"] = clueData1.clue;
+            answers["1"] = clueData1.answer;
+
+            const clueData2 = generateClue2();
+            clues["2"] = clueData2.clue;
+            answers["2"] = clueData2.answer;
+
+            const clueData3 = generateClue3();
+            clues["3"] = clueData3.clue;
+            answers["3"] = clueData3.answer;
+
+            const clueData4 = generateClue4();
+            clues["4"] = clueData4.clue;
+            answers["4"] = clueData4.answer;
+
+            const clueData5 = generateClue5();
+            clues["5"] = clueData5.clue;
+            answers["5"] = clueData5.answer;
+
+            document.getElementById("activeClue").innerHTML = "<em>Clue Box</em>"; // Reset clue box
+            currentClue = null; // Ensure no clue is selected initially
+        }
+
+        function selectClue(clue) {
+            currentClue = clue;
+            clearSelection();
+            const clueBox = document.getElementById("activeClue");
+            clueBox.innerHTML = clues[clue] ? clues[clue] : "<em>Clue Box</em>";
+            clueMap[clue].forEach(i => { grid.children[i].classList.add("selected"); });
+            if (!timerInterval) { // Only start if not already running
+                startTimer();
+                timerStarted = true;
+            }
+        }
+
+        // Create grid
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement("div");
+            cell.classList.add("cell");
+            cell.dataset.index = i;
+
+            const label = document.createElement("div");
+            label.classList.add("label");
+            if (clueStarts[i]) {
+                label.textContent = clueStarts[i];
+            }
+
+            const input = document.createElement("div");
+            input.classList.add("input");
+            cell.appendChild(label);
+            cell.appendChild(input);
+            grid.appendChild(cell);
+
+            cell.onclick = () => {
+                const inputElement = cell.querySelector(".input");
+                if (inputElement.textContent.trim() !== "") {
+                    inputElement.textContent = ""; // Clear the clicked cell
+
+                    // Find the clue this cell belongs to and reset its answer in answerMap
+                    for (const clueId in clueMap) {
+                        if (clueMap[clueId].includes(i)) {
+                            answerMap[clueId] = ""; // Reset the entire answer for this clue
+                            // Also clear the input fields for all cells belonging to this clue
+                            clueMap[clueId].forEach(cellIndex => {
+                                grid.children[cellIndex].querySelector(".input").textContent = "";
+                            });
+                            break; // Assume a cell belongs to only one clue
+                        }
+                    }
+                }
+                for (const [clue, cells] of Object.entries(clueMap)) {
+                    if (cells.includes(i)) {
+                        selectClue(clue);
+                        break;
+                    }
+                }
+            };
+        }
+
+        function clearSelection() {
+            Array.from(grid.children).forEach(cell => {
+                cell.classList.remove("selected");
+            });
+        }
+
+        function appendNum(num) {
+            if (!currentClue) return;
+            const cells = clueMap[currentClue];
+            if (!answerMap[currentClue]) answerMap[currentClue] = "";
+
+            if (answerMap[currentClue].length < cells.length) {
+                answerMap[currentClue] += num;
+                const idx = answerMap[currentClue].length - 1;
+                grid.children[cells[idx]].querySelector(".input").textContent = num;
+            }
+
+            if (answerMap[currentClue].length === cells.length) {
+                validate(currentClue);
+                goToNextClue(currentClue);
+            }
+        }
+
+        function backspace() {
+            if (!currentClue) return;
+            const cells = clueMap[currentClue];
+            const length = answerMap[currentClue]?.length || 0;
+            if (length === 0) return;
+
+            const idx = length - 1;
+            grid.children[cells[idx]].querySelector(".input").textContent = "";
+            answerMap[currentClue] = answerMap[currentClue].slice(0, -1);
+        }
+
+        function validate(clue) {
+            const isCorrect = answerMap[clue] === answers[clue];
+            clueMap[clue].forEach(i => {
+                const cell = grid.children[i];
+                cell.classList.remove("correct", "incorrect");
+                cell.classList.add(isCorrect ? "correct" : "incorrect");
+            });
+            const allCorrect = Object.entries(answers).every(([clueId, correctAnswer]) => {
+                const cells = clueMap[clueId];
+                const userInput = cells.map(i => document.querySelector(`#grid > .cell:nth-child(${i + 1}) .input`).textContent.trim()).join("");
+                return userInput === correctAnswer;
+            });
+            if (allCorrect) {
+                stopTimer();
+                showConfetti();
+            }
+        }
+
+        function goToNextClue(currentClue) {
+            const clueOrder = ["1", "2", "3", "4", "5"];
+            const currentIndex = clueOrder.indexOf(currentClue);
+            const nextClue = clueOrder[currentIndex + 1];
+            currentClue = null;
+            if (nextClue) {
+                setTimeout(() => selectClue(nextClue), 100);
+            }
+        }
+
+        function showConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement("div");
+                confetti.className = "confetti";
+                confetti.style.left = Math.random() * window.innerWidth + "px";
+                confetti.style.top = "-10px";
+                confetti.style.backgroundColor = "hsl(" + Math.random() * 360 + ", 100%, 60%)";
+                confetti.style.animationDuration = (Math.random() + 1) + "s";
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 2000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timer = 0;
+            document.getElementById("timer").innerText = "Time: 0.0s";
+        }
+
+        function resetPuzzle() {
+            resetTimer();
+            timerStarted = false; // Reset timerStarted on puzzle reset
+            answerMap["1"] = ""; answerMap["2"] = ""; answerMap["3"] = ""; answerMap["4"] = ""; answerMap["5"] = "";
+            for (const clue in clueMap) {
+                clueMap[clue].forEach(i => {
+                    const cell = grid.children[i];
+                    cell.querySelector(".input").textContent = "";
+                    cell.classList.remove("correct", "incorrect", "selected");
+                });
+            }
+            document.getElementById("activeClue").innerHTML = "<em>Clue Box</em>";
+            currentClue = null;
+        }
+
+        function newPuzzle() {
+            resetTimer(); // Ensure the timer is stopped and reset
+
+            // Clear the answer map
+            answerMap["1"] = "";
+            answerMap["2"] = "";
+            answerMap["3"] = "";
+            answerMap["4"] = "";
+            answerMap["5"] = "";
+
+            // Clear the grid
+            for (const clue in clueMap) {
+                clueMap[clue].forEach(i => {
+                    const cell = grid.children[i];
+                    cell.querySelector(".input").textContent = "";
+                    cell.classList.remove("correct", "incorrect", "selected");
+                });
+            }
+            document.getElementById("activeClue").innerHTML = "<em>Clue Box</em>";
+            currentClue = null;
+
+            // Generate new clues and answers
+            initializePuzzle();
+        }
 
         function startTimer() {
-            startTime = Date.now();
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    timer += 0.1;
+                    document.getElementById("timer").innerText = "Time: " + timer.toFixed(1) + "s";
+                }, 100);
+            }
+        }
+
+        function stopTimer() {
             clearInterval(timerInterval);
-            document.getElementById("timer").classList.remove("blink");
-            timerInterval = setInterval(() => {
-                const elapsed = (Date.now() - startTime) / 1000;
-                document.getElementById("timer").textContent = "⏱ Time: " + elapsed.toFixed(1) + " seconds";
-            }, 100);
+            timerInterval = null;
+            document.getElementById("timer").innerText = "Time: " + timer.toFixed(1) + "s";
         }
 
-        function clearGrid() {
-            document.getElementById("grid").innerHTML = "";
-            document.getElementById("result").textContent = "";
+        window.onload = () => {
+            initializePuzzle();
+            resetTimer();
+            timerStarted = false;
         }
 
-        function createGridFromData(gridData, clueNumbers) {
-            const gridEl = document.getElementById("grid");
-            const keys = Object.keys(gridData);
-            const coords = keys.map(key => key.split('-').slice(1).map(Number));
-            const maxRow = Math.max(...coords.map(([r, _]) => r));
-            const maxCol = Math.max(...coords.map(([_, c]) => c));
-
-            gridEl.style.gridTemplateColumns = `repeat(${maxCol + 1}, 50px)`;
-            gridEl.style.gridTemplateRows = `repeat(${maxRow + 1}, 50px)`;
-
-            for (let row = 0; row <= maxRow; row++) {
-                for (let col = 0; col <= maxCol; col++) {
-                    const key = `cell-${row}-${col}`;
-                    if (gridData[key]) {
-                        const wrapper = document.createElement("div");
-                        wrapper.className = "cell-wrapper";
-
-                        const number = document.createElement("div");
-                        number.className = "clue-number";
-                        number.textContent = clueNumbers[key] || "";
-                        wrapper.appendChild(number);
-
-                        const input = document.createElement("input");
-                        input.type = "text";
-                        input.className = "cell";
-                        input.id = key;
-                        input.maxLength = 1;
-                        wrapper.appendChild(input);
-
-                        gridEl.appendChild(wrapper);
-                    } else {
-                        const empty = document.createElement("div");
-                        empty.style.width = "50px";
-                        empty.style.height = "50px";
-                        empty.style.backgroundColor = "#ddd";
-                        gridEl.appendChild(empty);
-                    }
-                }
+        // Keyboard support
+        document.addEventListener('keydown', function(event) {
+            if (!currentClue) return;
+            if (event.key >= '0' && event.key <= '9') {
+                appendNum(event.key);
+            } else if (event.key === 'Backspace' || event.key === 'Delete') {
+                backspace();
             }
-        }
+        });
 
-        function loadPuzzleByDate(dateOverride) {
-            const selectedDate = dateOverride || document.getElementById("puzzle-date").value;
-            if (!selectedDate) {
-                alert("Please select a date.");
-                return;
-            }
-
-            fetch(`https://math-puzzle-site.onrender.com/api/puzzles`)
-                .then(res => res.json())
-                .then(allPuzzles => {
-                    const match = allPuzzles.find(p =>
-                        (p.assigned_date || "").startsWith(selectedDate)
-                    );
-                    if (!match) {
-                        alert("No puzzle found for this date.");
-                        return;
-                    }
-                    loadPuzzleById(match.id);
-                });
-        }
-
-        function loadPuzzleById(id) {
-            fetch(`https://math-puzzle-site.onrender.com/api/puzzles/${id}`)
-                .then(res => res.json())
-                .then(data => {
-                    solution = data.grid || {};
-                    clueNumbers = data.clue_numbers || {};
-                    const acrossList = document.getElementById("across-clues");
-
-                    clearGrid();
-                    acrossList.innerHTML = "";
-                    createGridFromData(solution, clueNumbers);
-                    startTimer();
-                    puzzleLoaded = true;
-
-                    const clues = data.clues.across || [];
-                    clues.forEach(clue => {
-                        const li = document.createElement("li");
-                        li.textContent = clue;
-                        acrossList.appendChild(li);
-                    });
-                })
-                .catch(err => {
-                    alert("Failed to load puzzle.");
-                    console.error(err);
-                });
-        }
-
-        function checkAnswers() {
-            if (!puzzleLoaded) return;
-            let correct = true;
-            for (const key in solution) {
-                const input = document.getElementById(key);
-                if (!input) continue;
-                const userAnswer = input.value.trim();
-                if (userAnswer === solution[key]) {
-                    input.style.backgroundColor = "#c8f7c5";
-                } else {
-                    input.style.backgroundColor = "#f8b4b4";
-                    correct = false;
-                }
-            }
-
-            if (correct) {
-                clearInterval(timerInterval);
-                document.getElementById("timer").classList.add("blink");
-                document.getElementById("result").textContent = "✅ All correct!";
-            } else {
-                document.getElementById("result").textContent = "❌ Some answers are incorrect.";
-            }
-        }
-
-        // Load today's puzzle by default
-        window.onload = function () {
-            const today = new Date().toISOString().slice(0, 10);
-            document.getElementById("puzzle-date").value = today;
-            loadPuzzleByDate(today);
-        }
+        window.onload = () => {
+            initializePuzzle(); // Initialize the puzzle with new clues when the page loads
+            // startTimer(); // You can decide if you want the timer to start on load or only when a clue is selected
+        };
     </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </body>
+
 </html>
